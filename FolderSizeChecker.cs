@@ -43,9 +43,10 @@ class Program
     {
         try
         {
-            long sizeInBytes = GetDirectorySize(_folderPath);
+            int fileCount;
+            long sizeInBytes = GetDirectorySize(_folderPath, out fileCount);
             string humanReadableSize = BytesToString(sizeInBytes);
-            Console.WriteLine("Folder Size: " + humanReadableSize + " at " + DateTime.Now);
+            Console.WriteLine("Folder Size: " + humanReadableSize + " - Number of Files: " + fileCount + " at " + DateTime.Now);
         }
         catch (Exception ex)
         {
@@ -53,10 +54,11 @@ class Program
         }
     }
 
-    private static long GetDirectorySize(string folderPath)
+    private static long GetDirectorySize(string folderPath, out int fileCount)
     {
         long size = 0;
         string[] fileNames = Directory.GetFiles(folderPath, "*.*", SearchOption.AllDirectories);
+        fileCount = fileNames.Length;
 
         foreach (string fileName in fileNames)
         {
@@ -69,7 +71,7 @@ class Program
 
     static string BytesToString(long byteCount)
     {
-        string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; // Longs run out around EB
+        string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; 
         if (byteCount == 0)
             return "0" + suf[0];
         long bytes = Math.Abs(byteCount);
